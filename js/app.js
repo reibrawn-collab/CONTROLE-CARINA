@@ -4,17 +4,15 @@ let historico =
 JSON.parse(localStorage.getItem("historicoCarina")) || [];
 
 function salvarDados() {
-
-    localStorage.setItem(
-        "saldoCarina",
-        saldo
-    );
-
+    localStorage.setItem("saldoCarina", saldo);
     localStorage.setItem(
         "historicoCarina",
         JSON.stringify(historico)
     );
+}
 
+function dataAtual() {
+    return new Date().toLocaleString("pt-BR");
 }
 
 function atualizarTela() {
@@ -45,28 +43,17 @@ function atualizarTela() {
 
 }
 
-function dataAtual() {
-
-    return new Date()
-        .toLocaleString("pt-BR");
-
-}
-
 function receberProduto() {
 
     saldo += 6;
 
     historico.unshift({
-
         data: dataAtual(),
-
         movimento:
         "Recebido 1 produto (+6 pizzas)"
-
     });
 
     salvarDados();
-
     atualizarTela();
 
 }
@@ -81,31 +68,37 @@ function registrarRetirada() {
         document.getElementById("quantidade").value
     );
 
-    if (quantidade <= 0) {
+    if (!quantidade || quantidade <= 0) {
 
-        alert(
-            "Informe uma quantidade válida."
-        );
+        alert("Quantidade inválida.");
 
         return;
-
     }
 
     if (quantidade > saldo) {
 
-        alert(
-            "Saldo insuficiente."
-        );
+        alert("Saldo insuficiente.");
 
         return;
-
     }
 
     saldo -= quantidade;
 
     historico.unshift({
-
         data: dataAtual(),
-
         movimento:
-        `${responsavel} retirou $
+        responsavel +
+        " retirou " +
+        quantidade +
+        " pizza(s)"
+    });
+
+    salvarDados();
+    atualizarTela();
+
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    atualizarTela
+);
