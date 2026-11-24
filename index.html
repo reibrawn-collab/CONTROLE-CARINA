@@ -1,148 +1,806 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle Carina</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Controle de Permuta - Carina</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #18181b;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --primary: #ea580c;
+      --primary-hover: #c2410c;
+      --green-bg: #ecfdf5;
+      --green-text: #047857;
+      --amber-bg: #fffbeb;
+      --amber-text: #b45309;
+      --red-bg: #fef2f2;
+      --red-text: #b91c1c;
+      --whatsapp: #16a34a;
+      --whatsapp-hover: #15803d;
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+    }
 
-    <link rel="stylesheet" href="css/style.css">
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px 14px 48px;
+      line-height: 1.45;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .saldo-box {
+      background: linear-gradient(135deg, #fff7ed, #ffedd5);
+      border: 1px solid #fdba74;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .saldo-numero {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .saldo-label {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #431407;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .stat {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .stat-title {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .quick-presets {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .preset-btn {
+      border: 1px solid var(--border);
+      background: #fafafa;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+    }
+
+    .preset-btn:hover {
+      border-color: var(--primary);
+      background: #fff7ed;
+    }
+
+    .preset-btn.active {
+      border-color: var(--primary);
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 145px 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.92rem;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.99);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-whatsapp {
+      background: var(--whatsapp);
+      color: #fff;
+    }
+
+    .btn-whatsapp:hover {
+      background: var(--whatsapp-hover);
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .btn-danger-ghost {
+      background: transparent;
+      color: var(--red-text);
+      border: 1px solid #fecaca;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-danger-ghost:hover {
+      background: var(--red-bg);
+    }
+
+    .btn-edit-ghost {
+      background: transparent;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-edit-ghost:hover {
+      background: #eff6ff;
+    }
+
+    .actions-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .whats-config {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .whats-config label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .whats-config input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    th {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .badge-in {
+      background: var(--green-bg);
+      color: var(--green-text);
+    }
+
+    .badge-out {
+      background: var(--amber-bg);
+      color: var(--amber-text);
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #111827;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.25s ease;
+      z-index: 99;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 640px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .quick-presets {
+        grid-template-columns: 1fr;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      th:nth-child(3), td:nth-child(3) {
+        display: none;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="container">
+    <!-- Cabeçalho e Resumo -->
+    <section class="card">
+      <div class="header-top">
+        <div class="title">🍕 Controle de Permuta - Carina</div>
+        <button class="btn btn-secondary" onclick="resetarHistoricoInicial()" title="Voltar aos lançamentos iniciais">
+          Restaurar histórico inicial
+        </button>
+      </div>
 
-    <header class="topo">
-        <h1>📊 Controle Carina</h1>
-        <p>Controle de Produtos e Pizzas</p>
-    </header>
+      <div class="saldo-box">
+        <div>
+          <div class="saldo-label">Saldo atual a favor da Carina</div>
+          <div id="saldoDetalhe" style="font-size: 0.8rem; color: #7c2d12;">Calculado automaticamente</div>
+        </div>
+        <div id="saldoPizzas" class="saldo-numero">9 pizzas</div>
+      </div>
 
-    <main class="container">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-title">Produtos recebidos por você</div>
+          <div id="totalProdutos" class="stat-value">4</div>
+        </div>
+        <div class="stat">
+          <div class="stat-title">Crédito gerado</div>
+          <div id="creditoGerado" class="stat-value">24 pizzas</div>
+        </div>
+        <div class="stat">
+          <div class="stat-title">Pizzas retiradas pela Carina</div>
+          <div id="pizzasRetiradas" class="stat-value">15</div>
+        </div>
+      </div>
+    </section>
 
-        <!-- DASHBOARD -->
+    <!-- Novo Lançamento -->
+    <section class="card">
+      <h2 id="formTitulo">Novo Lançamento</h2>
 
-        <section class="dashboard">
+      <div class="quick-presets">
+        <button type="button" class="preset-btn active" data-type="IN" data-qty="6" data-desc="Recebi 1 produto (+6 pizzas)" onclick="selecionarPreset(this)">
+          Recebi 1 produto (+6 pizzas)
+        </button>
+        <button type="button" class="preset-btn" data-type="OUT" data-qty="1" data-desc="Carina retirou 1 pizza" onclick="selecionarPreset(this)">
+          Carina retirou 1 pizza
+        </button>
+        <button type="button" class="preset-btn" data-type="OUT" data-qty="2" data-desc="Carina retirou 2 pizzas" onclick="selecionarPreset(this)">
+          Carina retirou 2 pizzas
+        </button>
+        <button type="button" class="preset-btn" data-type="OUT" data-qty="3" data-desc="Carina retirou 3 pizzas" onclick="selecionarPreset(this)">
+          Carina retirou 3 pizzas
+        </button>
+      </div>
 
-            <div class="card indicador saldo-card">
-                <h3>🍕 Saldo Atual</h3>
-                <div id="saldo" class="numero">9</div>
-            </div>
+      <form id="lancamentoForm" class="form-grid" onsubmit="salvarLancamento(event)">
+        <div class="field">
+          <label for="dataInput">Data (DD/MM)</label>
+          <input type="text" id="dataInput" placeholder="Ex: 24/11" maxlength="5" required />
+        </div>
+        <div class="field">
+          <label for="tipoSelect">Tipo de movimento</label>
+          <select id="tipoSelect" onchange="sincronizarTipo()">
+            <option value="IN|6|Recebi 1 produto (+6)">Recebi 1 produto (+6 pizzas)</option>
+            <option value="OUT|1|Carina retirou 1 pizza">Carina retirou 1 pizza</option>
+            <option value="OUT|2|Carina retirou 2 pizzas">Carina retirou 2 pizzas</option>
+            <option value="OUT|3|Carina retirou 3 pizzas">Carina retirou 3 pizzas</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="submit" id="btnSalvar" class="btn btn-primary">Salvar</button>
+          <button type="button" id="btnCancelarEdicao" class="btn btn-secondary" style="display: none;" onclick="cancelarEdicao()">Cancelar</button>
+        </div>
+      </form>
+    </section>
 
-            <div class="card indicador produto-card">
-                <h3>📦 Produtos Recebidos</h3>
-                <div id="totalProdutos" class="numero">0</div>
-            </div>
+    <!-- Relatório e WhatsApp -->
+    <section class="card">
+      <h2>Relatório para WhatsApp</h2>
+      <p style="font-size: 0.86rem; color: var(--muted);">
+        Gera o resumo atualizado com saldo e histórico para enviar direto no WhatsApp.
+      </p>
 
-            <div class="card indicador retirada-card">
-                <h3>📉 Pizzas Retiradas</h3>
-                <div id="totalRetiradas" class="numero">0</div>
-            </div>
+      <div class="whats-config">
+        <label for="whatsPhone">Telefone da Carina (opcional — com DDD, ex: 67999999999)</label>
+        <input type="tel" id="whatsPhone" placeholder="Deixe em branco para escolher o contato no WhatsApp" oninput="salvarTelefoneWhats()" />
+      </div>
 
-        </section>
+      <div class="actions-bar">
+        <button type="button" class="btn btn-whatsapp" onclick="enviarWhatsApp()">
+          📲 Enviar relatório pelo WhatsApp
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="copiarRelatorio()">
+          📋 Copiar texto do relatório
+        </button>
+      </div>
+    </section>
 
-        <!-- RECEBIMENTO -->
+    <!-- Histórico -->
+    <section class="card">
+      <div class="history-header">
+        <h2 style="margin-bottom: 0;">Histórico de Movimentos</h2>
+        <span id="contadorItens" style="font-size: 0.82rem; color: var(--muted);"></span>
+      </div>
 
-        <section class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Movimento</th>
+            <th>Tipo</th>
+            <th style="text-align: right;">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="historicoBody"></tbody>
+      </table>
+    </section>
+  </div>
 
-            <h2>📦 Recebimento de Produtos</h2>
+  <div id="toast" class="toast"></div>
 
-            <label>Quantidade de Produtos</label>
+  <script>
+    const STORAGE_KEY = "controle_permuta_carina_v3_items";
+    const PHONE_KEY = "controle_permuta_carina_v3_phone";
 
-            <input
-                type="number"
-                id="qtdProdutos"
-                value="1"
-                min="1">
+    const HISTORICO_INICIAL = [
+      { id: 1, data: "17/10", tipo: "IN", quantidade: 6, descricao: "Recebi 1 produto (+6)" },
+      { id: 2, data: "17/10", tipo: "OUT", quantidade: 1, descricao: "Carina retirou 1 pizza" },
+      { id: 3, data: "25/10", tipo: "OUT", quantidade: 2, descricao: "Carina retirou 2 pizzas" },
+      { id: 4, data: "31/10", tipo: "IN", quantidade: 6, descricao: "Recebi 1 produto (+6)" },
+      { id: 5, data: "01/11", tipo: "OUT", quantidade: 2, descricao: "Carina retirou 2 pizzas" },
+      { id: 6, data: "02/11", tipo: "OUT", quantidade: 2, descricao: "Carina retirou 2 pizzas" },
+      { id: 7, data: "07/11", tipo: "OUT", quantidade: 2, descricao: "Carina retirou 2 pizzas" },
+      { id: 8, data: "10/11", tipo: "OUT", quantidade: 1, descricao: "Carina retirou 1 pizza" },
+      { id: 9, data: "10/11", tipo: "IN", quantidade: 6, descricao: "Recebi 1 produto (+6)" },
+      { id: 10, data: "14/11", tipo: "OUT", quantidade: 2, descricao: "Carina retirou 2 pizzas" },
+      { id: 11, data: "19/11", tipo: "OUT", quantidade: 1, descricao: "Carina retirou 1 pizza" },
+      { id: 12, data: "21/11", tipo: "OUT", quantidade: 2, descricao: "Carina retirou 2 pizzas" },
+      { id: 13, data: "21/11", tipo: "IN", quantidade: 6, descricao: "Recebi 1 produto (+6)" }
+    ];
 
-            <button
-                class="btn btn-sucesso"
-                onclick="registrarRecebimento()">
+    let itens = [];
+    let editandoId = null;
 
-                ➕ Registrar Recebimento
+    function mostrarToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2400);
+    }
 
-            </button>
+    function dataHojeDDMM() {
+      const hoje = new Date();
+      const dia = String(hoje.getDate()).padStart(2, "0");
+      const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+      return `${dia}/${mes}`;
+    }
 
-        </section>
+    function carregarDados() {
+      const salvo = localStorage.getItem(STORAGE_KEY);
+      if (salvo) {
+        try {
+          itens = JSON.parse(salvo);
+        } catch {
+          itens = [...HISTORICO_INICIAL];
+        }
+      } else {
+        itens = [...HISTORICO_INICIAL];
+        salvarNoStorage();
+      }
 
-        <!-- RETIRADA -->
+      document.getElementById("dataInput").value = dataHojeDDMM();
+      const phoneSalvo = localStorage.getItem(PHONE_KEY);
+      if (phoneSalvo) {
+        document.getElementById("whatsPhone").value = phoneSalvo;
+      }
+      renderizarTudo();
+    }
 
-        <section class="card">
+    function salvarNoStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(itens));
+    }
 
-            <h2>🍕 Retirada da Carina</h2>
+    function salvarTelefoneWhats() {
+      const tel = document.getElementById("whatsPhone").value.replace(/\D/g, "");
+      localStorage.setItem(PHONE_KEY, tel);
+    }
 
-            <label>Quantidade de Pizzas</label>
+    function selecionarPreset(btn) {
+      document.querySelectorAll(".preset-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
 
-            <input
-                type="number"
-                id="qtdRetirada"
-                value="1"
-                min="1">
+      const tipo = btn.dataset.type;
+      const qty = btn.dataset.qty;
+      const desc = tipo === "IN" ? "Recebi 1 produto (+6)" : btn.dataset.desc;
+      document.getElementById("tipoSelect").value = `${tipo}|${qty}|${desc}`;
+    }
 
-            <button
-                class="btn btn-perigo"
-                onclick="registrarRetirada()">
+    function sincronizarTipo() {
+      const val = document.getElementById("tipoSelect").value;
+      const [tipo, qty] = val.split("|");
+      document.querySelectorAll(".preset-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.type === tipo && b.dataset.qty === qty);
+      });
+    }
 
-                ➖ Registrar Retirada
+    function validarDataDDMM(str) {
+      return /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])$/.test(str.trim());
+    }
 
-            </button>
+    function salvarLancamento(event) {
+      event.preventDefault();
+      const dataStr = document.getElementById("dataInput").value.trim();
+      if (!validarDataDDMM(dataStr)) {
+        mostrarToast("Digite a data no formato DD/MM (ex: 24/11)");
+        return;
+      }
 
-        </section>
+      const [tipo, qtyStr, desc] = document.getElementById("tipoSelect").value.split("|");
+      const quantidade = Number(qtyStr);
 
-        <!-- AÇÕES -->
+      if (editandoId !== null) {
+        itens = itens.map(item =>
+          item.id === editandoId
+            ? { ...item, data: dataStr, tipo, quantidade, descricao: desc }
+            : item
+        );
+        editandoId = null;
+        document.getElementById("formTitulo").textContent = "Novo Lançamento";
+        document.getElementById("btnSalvar").textContent = "Salvar";
+        document.getElementById("btnCancelarEdicao").style.display = "none";
+        mostrarToast("Lançamento atualizado!");
+      } else {
+        const novoId = itens.length ? Math.max(...itens.map(i => i.id)) + 1 : 1;
+        itens.push({
+          id: novoId,
+          data: dataStr,
+          tipo,
+          quantidade,
+          descricao: desc
+        });
+        mostrarToast("Lançamento salvo!");
+      }
 
-        <section class="card">
+      salvarNoStorage();
+      renderizarTudo();
+    }
 
-            <h2>⚙️ Ações</h2>
+    function editarLancamento(id) {
+      const item = itens.find(i => i.id === id);
+      if (!item) return;
 
-            <div class="acoes">
+      editandoId = id;
+      document.getElementById("formTitulo").textContent = "Editando Lançamento";
+      document.getElementById("btnSalvar").textContent = "Salvar alteração";
+      document.getElementById("btnCancelarEdicao").style.display = "inline-flex";
+      document.getElementById("dataInput").value = item.data;
 
-                <button
-                    class="btn btn-secundario"
-                    onclick="desfazerUltimo()">
+      const opcaoValor = `${item.tipo}|${item.quantidade}|${item.descricao}`;
+      const select = document.getElementById("tipoSelect");
+      if ([...select.options].some(opt => opt.value === opcaoValor)) {
+        select.value = opcaoValor;
+      }
+      sincronizarTipo();
+      document.getElementById("dataInput").focus();
+    }
 
-                    ↩️ Desfazer Último
+    function cancelarEdicao() {
+      editandoId = null;
+      document.getElementById("formTitulo").textContent = "Novo Lançamento";
+      document.getElementById("btnSalvar").textContent = "Salvar";
+      document.getElementById("btnCancelarEdicao").style.display = "none";
+      document.getElementById("dataInput").value = dataHojeDDMM();
+    }
 
-                </button>
+    function apagarLancamento(id) {
+      const confirmar = confirm("Deseja realmente apagar este lançamento?");
+      if (!confirmar) return;
 
-                <button
-                    class="btn btn-whats"
-                    onclick="copiarRelatorio()">
+      itens = itens.filter(item => item.id !== id);
+      if (editandoId === id) {
+        cancelarEdicao();
+      }
+      salvarNoStorage();
+      renderizarTudo();
+      mostrarToast("Lançamento apagado.");
+    }
 
-                    📱 Relatório WhatsApp
+    function resetarHistoricoInicial() {
+      const confirmar = confirm("Restaurar os lançamentos iniciais? Alterações manuais atuais serão substituídas.");
+      if (!confirmar) return;
 
-                </button>
+      itens = [...HISTORICO_INICIAL];
+      cancelarEdicao();
+      salvarNoStorage();
+      renderizarTudo();
+      mostrarToast("Histórico inicial restaurado!");
+    }
 
-            </div>
+    function calcularResumo() {
+      const produtosRecebidos = itens.filter(i => i.tipo === "IN").length;
+      const creditoGerado = itens
+        .filter(i => i.tipo === "IN")
+        .reduce((acc, i) => acc + i.quantidade, 0);
 
-        </section>
+      const pizzasRetiradas = itens
+        .filter(i => i.tipo === "OUT")
+        .reduce((acc, i) => acc + i.quantidade, 0);
 
-        <!-- HISTÓRICO -->
+      const saldo = creditoGerado - pizzasRetiradas;
 
-        <section class="card">
+      return {
+        produtosRecebidos,
+        creditoGerado,
+        pizzasRetiradas,
+        saldo
+      };
+    }
 
-            <h2>📜 Histórico de Movimentações</h2>
+    function renderizarTudo() {
+      const { produtosRecebidos, creditoGerado, pizzasRetiradas, saldo } = calcularResumo();
 
-            <table>
+      document.getElementById("totalProdutos").textContent = produtosRecebidos;
+      document.getElementById("creditoGerado").textContent = `${creditoGerado} pizzas`;
+      document.getElementById("pizzasRetiradas").textContent = pizzasRetiradas;
 
-                <thead>
+      const saldoEl = document.getElementById("saldoPizzas");
+      const detalheEl = document.getElementById("saldoDetalhe");
 
-                    <tr>
-                        <th>Data/Hora</th>
-                        <th>Movimento</th>
-                        <th>Saldo</th>
-                    </tr>
+      if (saldo >= 0) {
+        saldoEl.textContent = `${saldo} ${saldo === 1 ? "pizza" : "pizzas"}`;
+        detalheEl.textContent = `Crédito de ${creditoGerado} - ${pizzasRetiradas} retiradas`;
+      } else {
+        const excedente = Math.abs(saldo);
+        saldoEl.textContent = `-${excedente} ${excedente === 1 ? "pizza" : "pizzas"}`;
+        detalheEl.textContent = `Retiradas superaram o crédito em ${excedente} ${excedente === 1 ? "pizza" : "pizzas"}`;
+      }
 
-                </thead>
+      const tbody = document.getElementById("historicoBody");
+      tbody.innerHTML = "";
 
-                <tbody id="historico"></tbody>
+      if (itens.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" style="text-align: center; color: var(--muted); padding: 20px;">
+              Nenhum lançamento registrado no momento.
+            </td>
+          </tr>
+        `;
+      } else {
+        itens.forEach(item => {
+          const tr = document.createElement("tr");
+          const isIn = item.tipo === "IN";
+          tr.innerHTML = `
+            <td><strong>${item.data}</strong></td>
+            <td>${item.descricao}</td>
+            <td>
+              <span class="badge ${isIn ? "badge-in" : "badge-out"}">
+                ${isIn ? `+${item.quantidade} crédito` : `-${item.quantidade} retirada`}
+              </span>
+            </td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="btn-edit-ghost" onclick="editarLancamento(${item.id})">Editar</button>
+                <button type="button" class="btn-danger-ghost" onclick="apagarLancamento(${item.id})">Apagar</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
 
-            </table>
+      document.getElementById("contadorItens").textContent = `${itens.length} ${itens.length === 1 ? "registro" : "registros"}`;
+    }
 
-        </section>
+    function gerarTextoRelatorio() {
+      const { produtosRecebidos, creditoGerado, pizzasRetiradas, saldo } = calcularResumo();
+      const linhasHistorico = itens.map(i => `• ${i.data} — ${i.descricao}`).join("\n");
 
-    </main>
+      return [
+        "🍕 *Controle de Permuta - Carina*",
+        "",
+        `*Saldo atual a favor da Carina:* ${saldo} ${Math.abs(saldo) === 1 ? "pizza" : "pizzas"}`,
+        `• Produtos recebidos por você: ${produtosRecebidos}`,
+        `• Crédito gerado: ${creditoGerado} pizzas`,
+        `• Pizzas retiradas pela Carina: ${pizzasRetiradas}`,
+        "",
+        "*Histórico de Movimentos:*",
+        linhasHistorico || "• Sem movimentos"
+      ].join("\n");
+    }
 
-    <script src="js/app.js"></script>
+    function enviarWhatsApp() {
+      const texto = encodeURIComponent(gerarTextoRelatorio());
+      let phone = document.getElementById("whatsPhone").value.replace(/\D/g, "");
+      if (phone && !phone.startsWith("55") && phone.length >= 10) {
+        phone = "55" + phone;
+      }
 
+      const url = phone
+        ? `https://wa.me/${phone}?text=${texto}`
+        : `https://wa.me/?text=${texto}`;
+
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    async function copiarRelatorio() {
+      const texto = gerarTextoRelatorio();
+      try {
+        await navigator.clipboard.writeText(texto);
+        mostrarToast("Relatório copiado!");
+      } catch {
+        const temp = document.createElement("textarea");
+        temp.value = texto;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+        mostrarToast("Relatório copiado!");
+      }
+    }
+
+    carregarDados();
+  </script>
 </body>
-
 </html>
