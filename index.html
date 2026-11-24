@@ -388,8 +388,8 @@
 
     <div class="card saldo-card">
       <p class="saldo-label">Saldo atual a favor da Carina</p>
-      <p class="saldo-sub" id="saldoDetalhe">Crédito de 24 - 9 retiradas</p>
-      <p class="saldo-valor" id="saldoValor">15 pizzas</p>
+      <p class="saldo-sub" id="saldoDetalhe">Crédito de 24 - 15 retiradas</p>
+      <p class="saldo-valor" id="saldoValor">9 pizzas</p>
     </div>
 
     <div class="stats-grid">
@@ -403,7 +403,7 @@
       </div>
       <div class="stat-box">
         <div class="stat-title">Pizzas retiradas</div>
-        <div class="stat-num" id="statRetiradas">9 pizzas</div>
+        <div class="stat-num" id="statRetiradas">15 pizzas</div>
       </div>
     </div>
 
@@ -536,16 +536,16 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "permuta_carina_kv_v4";
+    const STORAGE_KEY = "permuta_carina_kv_v5";
 
     const DADOS_INICIAIS = [
       { id: 1, tipo: "credito", qtd: 6, tamanho: "Produto Permuta", data: "2026-10-01", obs: "Produto 1 (6 pizzas)" },
       { id: 2, tipo: "credito", qtd: 6, tamanho: "Produto Permuta", data: "2026-10-05", obs: "Produto 2 (6 pizzas)" },
       { id: 3, tipo: "credito", qtd: 6, tamanho: "Produto Permuta", data: "2026-10-10", obs: "Produto 3 (6 pizzas)" },
       { id: 4, tipo: "credito", qtd: 6, tamanho: "Produto Permuta", data: "2026-10-15", obs: "Produto 4 (6 pizzas)" },
-      { id: 5, tipo: "retirada", qtd: 3, tamanho: "Grande 35cm", data: "2026-10-18", obs: "Retirada acumulada (3 pizzas)" },
-      { id: 6, tipo: "retirada", qtd: 3, tamanho: "Grande 35cm", data: "2026-10-22", obs: "Retirada acumulada (3 pizzas)" },
-      { id: 7, tipo: "retirada", qtd: 3, tamanho: "Grande 35cm", data: "2026-10-26", obs: "Retirada acumulada (3 pizzas)" }
+      { id: 5, tipo: "retirada", qtd: 5, tamanho: "Grande 35cm", data: "2026-10-18", obs: "Retirada acumulada (5 pizzas)" },
+      { id: 6, tipo: "retirada", qtd: 5, tamanho: "Grande 35cm", data: "2026-10-22", obs: "Retirada acumulada (5 pizzas)" },
+      { id: 7, tipo: "retirada", qtd: 5, tamanho: "Grande 35cm", data: "2026-10-26", obs: "Retirada acumulada (5 pizzas)" }
     ];
 
     let registros = [];
@@ -720,7 +720,7 @@
     }
 
     function restaurarInicial() {
-      if (!confirm("Isso vai restaurar os dados iniciais padrão (4 produtos = 24 pizzas e 9 retiradas). Continuar?")) return;
+      if (!confirm("Isso vai restaurar os dados iniciais padrão (4 produtos = 24 pizzas e 15 retiradas). Continuar?")) return;
       registros = [...DADOS_INICIAIS];
       salvarDados();
       renderizar();
