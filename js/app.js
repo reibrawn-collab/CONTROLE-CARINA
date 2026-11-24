@@ -74,6 +74,37 @@ saldo:9
 
 i
 
+function atualizarTela(){
+
+    document.getElementById("saldo").innerText =
+    saldo;
+
+    document.getElementById("totalProdutos").innerText =
+    totalProdutos;
+
+    document.getElementById("totalRetiradas").innerText =
+    totalRetiradas;
+
+    const tbody =
+    document.getElementById("historico");
+
+    tbody.innerHTML = "";
+
+    historico.forEach(item=>{
+
+        const linha =
+        document.createElement("tr");
+
+        linha.innerHTML =
+        "<td>"+item.data+"</td>" +
+        "<td>"+item.movimento+"</td>" +
+        "<td>"+item.saldo+"</td>";
+
+        tbody.appendChild(linha);
+
+    });
+
+}
 
 function agora(){
 
