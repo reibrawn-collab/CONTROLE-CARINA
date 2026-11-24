@@ -1,79 +1,251 @@
-let saldo = Number(localStorage.getItem("saldoCarina")) || 9;
+let saldo = 9;
+let totalProdutos = 0;
+let totalRetiradas = 0;
 
-let historico = JSON.parse(localStorage.getItem("historicoCarina")) || [];
+let historico =
+JSON.parse(localStorage.getItem("historicoCarina")) || [];
 
-function salvarDados() {
-    localStorage.setItem("saldoCarina", saldo);
-    localStorage.setItem("historicoCarina", JSON.stringify(historico));
+if(localStorage.getItem("saldoCarina")){
+    saldo = Number(localStorage.getItem("saldoCarina"));
 }
 
-function atualizarTela() {
+if(localStorage.getItem("totalProdutos")){
+    totalProdutos =
+    Number(localStorage.getItem("totalProdutos"));
+}
 
-    document.getElementById("saldo").textContent = saldo;
+if(localStorage.getItem("totalRetiradas")){
+    totalRetiradas =
+    Number(localStorage.getItem("totalRetiradas"));
+}
 
-    const tabela = document.getElementById("historico");
+function salvar(){
 
-    tabela.innerHTML = "";
+    localStorage.setItem(
+        "saldoCarina",
+        saldo
+    );
 
-    historico.forEach(function(item){
+    localStorage.setItem(
+        "totalProdutos",
+        totalProdutos
+    );
 
-        const linha = document.createElement("tr");
+    localStorage.setItem(
+        "totalRetiradas",
+        totalRetiradas
+    );
+
+    localStorage.setItem(
+        "historicoCarina",
+        JSON.stringify(historico)
+    );
+
+}
+
+function atualizarTela(){
+
+    document.getElementById("saldo").innerText =
+    saldo;
+
+    document.getElementById("totalProdutos").innerText =
+    totalProdutos;
+
+    document.getElementById("totalRetiradas").innerText =
+    totalRetiradas;
+
+    const tbody =
+    document.getElementById("historico");
+
+    tbody.innerHTML = "";
+
+    historico.forEach(item=>{
+
+        const linha =
+        document.createElement("tr");
 
         linha.innerHTML =
-            "<td>" + item.data + "</td>" +
-            "<td>" + item.movimento + "</td>";
+        "<td>"+item.data+"</td>" +
+        "<td>"+item.movimento+"</td>" +
+        "<td>"+item.saldo+"</td>";
 
-        tabela.appendChild(linha);
+        tbody.appendChild(linha);
 
     });
+
 }
 
-function dataAtual() {
-    return new Date().toLocaleString("pt-BR");
+function agora(){
+
+    return new Date()
+    .toLocaleString("pt-BR");
+
 }
 
-function receberProduto() {
+function registrarRecebimento(){
 
-    saldo += 6;
+    const qtd =
+    Number(
+        document.getElementById("qtdProdutos").value
+    );
 
-    historico.unshift({
-        data: dataAtual(),
-        movimento: "Recebido 1 produto (+6 pizzas)"
-    });
+    if(qtd <= 0){
 
-    salvarDados();
-    atualizarTela();
-}
+        alert("Quantidade inválida");
 
-function registrarRetirada() {
-
-    const responsavel =
-        document.getElementById("responsavel").value;
-
-    const quantidade =
-        Number(document.getElementById("quantidade").value);
-
-    if (quantidade <= 0) {
-        alert("Quantidade inválida.");
         return;
     }
 
-    if (quantidade > saldo) {
-        alert("Saldo insuficiente.");
+    const pizzasGeradas =
+    qtd * 6;
+
+    saldo += pizzasGeradas;
+
+    totalProdutos += qtd;
+
+    historico.unshift({
+
+        data: agora(),
+
+        movimento:
+        "Recebimento de " +
+        qtd +
+        " produto(s) (+" +
+        pizzasGeradas +
+        " pizzas)",
+
+        saldo: saldo
+
+    });
+
+    salvar();
+
+    atualizarTela();
+
+}
+
+function registrarRetirada(){
+
+    const qtd =
+    Number(
+        document.getElementById("qtdRetirada").value
+    );
+
+    if(qtd <= 0){
+
+        alert("Quantidade inválida");
+
         return;
     }
 
-    saldo -= quantidade;
+    if(qtd > saldo){
+
+        alert("Saldo insuficiente");
+
+        return;
+    }
+
+    saldo -= qtd;
+
+    totalRetiradas += qtd;
 
     historico.unshift({
-        data: dataAtual(),
-        movimento: responsavel + " retirou " + quantidade + " pizza(s)"
+
+        data: agora(),
+
+        movimento:
+        "Carina retirou " +
+        qtd +
+        " pizza(s)",
+
+        saldo: saldo
+
     });
 
-    salvarDados();
+    salvar();
+
     atualizarTela();
+
 }
 
-window.onload = function () {
+function desfazerUltimo(){
+
+    if(historico.length === 0){
+
+        alert("Não há lançamentos.");
+
+        return;
+
+    }
+
+    const ultimo =
+    historico.shift();
+
+    if(
+        ultimo.movimento.includes("Recebimento")
+    ){
+
+        const match =
+        ultimo.movimento.match(/\((\+)(\d+)/);
+
+        if(match){
+
+            saldo -= Number(match[2]);
+
+        }
+
+    }else{
+
+        const match =
+        ultimo.movimento.match(/(\d+)/);
+
+        if(match){
+
+            saldo += Number(match[1]);
+
+            totalRetiradas -= Number(match[1]);
+
+        }
+
+    }
+
+    salvar();
+
     atualizarTela();
-};
+
+}
+
+function copiarRelatorio(){
+
+    let texto =
+`📊 CONTROLE CARINA
+
+🍕 Saldo Atual: ${saldo}
+
+📦 Produtos Recebidos: ${totalProdutos}
+
+📉 Pizzas Retiradas: ${totalRetiradas}
+
+Últimas movimentações:
+
+`;
+
+    historico.slice(0,10).forEach(item=>{
+
+        texto +=
+        item.data +
+        " - " +
+        item.movimento +
+        "\n";
+
+    });
+
+    navigator.clipboard.writeText(texto);
+
+    alert(
+    "Relatório copiado para a área de transferência."
+    );
+
+}
+
+atualizarTela();
