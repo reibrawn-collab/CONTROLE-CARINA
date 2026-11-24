@@ -1,46 +1,35 @@
 let saldo = Number(localStorage.getItem("saldoCarina")) || 9;
 
-let historico =
-JSON.parse(localStorage.getItem("historicoCarina")) || [];
+let historico = JSON.parse(localStorage.getItem("historicoCarina")) || [];
 
 function salvarDados() {
     localStorage.setItem("saldoCarina", saldo);
-    localStorage.setItem(
-        "historicoCarina",
-        JSON.stringify(historico)
-    );
-}
-
-function dataAtual() {
-    return new Date().toLocaleString("pt-BR");
+    localStorage.setItem("historicoCarina", JSON.stringify(historico));
 }
 
 function atualizarTela() {
 
-    const saldoEl =
-    document.getElementById("saldo");
+    document.getElementById("saldo").textContent = saldo;
 
-    saldoEl.textContent = saldo;
-
-    const tabela =
-    document.getElementById("historico");
+    const tabela = document.getElementById("historico");
 
     tabela.innerHTML = "";
 
-    historico.forEach(item => {
+    historico.forEach(function(item){
 
-        const linha =
-        document.createElement("tr");
+        const linha = document.createElement("tr");
 
-        linha.innerHTML = `
-            <td>${item.data}</td>
-            <td>${item.movimento}</td>
-        `;
+        linha.innerHTML =
+            "<td>" + item.data + "</td>" +
+            "<td>" + item.movimento + "</td>";
 
         tabela.appendChild(linha);
 
     });
+}
 
+function dataAtual() {
+    return new Date().toLocaleString("pt-BR");
 }
 
 function receberProduto() {
@@ -49,36 +38,28 @@ function receberProduto() {
 
     historico.unshift({
         data: dataAtual(),
-        movimento:
-        "Recebido 1 produto (+6 pizzas)"
+        movimento: "Recebido 1 produto (+6 pizzas)"
     });
 
     salvarDados();
     atualizarTela();
-
 }
 
 function registrarRetirada() {
 
     const responsavel =
-    document.getElementById("responsavel").value;
+        document.getElementById("responsavel").value;
 
     const quantidade =
-    Number(
-        document.getElementById("quantidade").value
-    );
+        Number(document.getElementById("quantidade").value);
 
-    if (!quantidade || quantidade <= 0) {
-
+    if (quantidade <= 0) {
         alert("Quantidade inválida.");
-
         return;
     }
 
     if (quantidade > saldo) {
-
         alert("Saldo insuficiente.");
-
         return;
     }
 
@@ -86,19 +67,13 @@ function registrarRetirada() {
 
     historico.unshift({
         data: dataAtual(),
-        movimento:
-        responsavel +
-        " retirou " +
-        quantidade +
-        " pizza(s)"
+        movimento: responsavel + " retirou " + quantidade + " pizza(s)"
     });
 
     salvarDados();
     atualizarTela();
-
 }
 
-document.addEventListener(
-    "DOMContentLoaded",
-    atualizarTela
-);
+window.onload = function () {
+    atualizarTela();
+};
