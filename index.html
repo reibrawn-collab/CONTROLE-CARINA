@@ -1,67 +1,79 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle Carina</title>
+let saldo = Number(localStorage.getItem("saldoCarina")) || 9;
 
-<link rel="stylesheet" href="css/style.css">
-</head>
+let historico = JSON.parse(localStorage.getItem("historicoCarina")) || [];
 
-<body>
+function salvarDados() {
+    localStorage.setItem("saldoCarina", saldo);
+    localStorage.setItem("historicoCarina", JSON.stringify(historico));
+}
 
-<header>
-    <h1>📊 Controle Carina</h1>
-</header>
+function atualizarTela() {
 
-<main class="container">
+    document.getElementById("saldo").textContent = saldo;
 
-    <section class="card">
-        <h2>Saldo Atual</h2>
-        <div id="saldo" class="saldo">9</div>
-    </section>
+    const tabela = document.getElementById("historico");
 
-    <section class="card">
-        <h2>Novo Lançamento</h2>
+    tabela.innerHTML = "";
 
-        <label>Responsável</label>
+    historico.forEach(function(item){
 
-        <select id="responsavel">
-            <option>Carina</option>
-            <option>Reinaldo</option>
-        </select>
+        const linha = document.createElement("tr");
 
-        <label>Quantidade</label>
+        linha.innerHTML =
+            "<td>" + item.data + "</td>" +
+            "<td>" + item.movimento + "</td>";
 
-        <input type="number" id="quantidade" value="1" min="1">
+        tabela.appendChild(linha);
 
-        <button onclick="receberProduto()">
-            ➕ Receber Produto (+6 pizzas)
-        </button>
+    });
+}
 
-        <button onclick="registrarRetirada()">
-            ➖ Registrar Retirada
-        </button>
-    </section>
+function dataAtual() {
+    return new Date().toLocaleString("pt-BR");
+}
 
-    <section class="card">
-        <h2>Histórico</h2>
+function receberProduto() {
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Movimento</th>
-                </tr>
-            </thead>
+    saldo += 6;
 
-            <tbody id="historico"></tbody>
-        </table>
-    </section>
+    historico.unshift({
+        data: dataAtual(),
+        movimento: "Recebido 1 produto (+6 pizzas)"
+    });
 
-</main>
+    salvarDados();
+    atualizarTela();
+}
 
-<script src="js/app.js"></script>
+function registrarRetirada() {
 
-</body>
-</html>
+    const responsavel =
+        document.getElementById("responsavel").value;
+
+    const quantidade =
+        Number(document.getElementById("quantidade").value);
+
+    if (quantidade <= 0) {
+        alert("Quantidade inválida.");
+        return;
+    }
+
+    if (quantidade > saldo) {
+        alert("Saldo insuficiente.");
+        return;
+    }
+
+    saldo -= quantidade;
+
+    historico.unshift({
+        data: dataAtual(),
+        movimento: responsavel + " retirou " + quantidade + " pizza(s)"
+    });
+
+    salvarDados();
+    atualizarTela();
+}
+
+window.onload = function () {
+    atualizarTela();
+};
