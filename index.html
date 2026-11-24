@@ -1,79 +1,148 @@
-let saldo = Number(localStorage.getItem("saldoCarina")) || 9;
+<!DOCTYPE html>
+<html lang="pt-BR">
 
-let historico = JSON.parse(localStorage.getItem("historicoCarina")) || [];
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Carina</title>
 
-function salvarDados() {
-    localStorage.setItem("saldoCarina", saldo);
-    localStorage.setItem("historicoCarina", JSON.stringify(historico));
-}
+    <link rel="stylesheet" href="css/style.css">
+</head>
 
-function atualizarTela() {
+<body>
 
-    document.getElementById("saldo").textContent = saldo;
+    <header class="topo">
+        <h1>📊 Controle Carina</h1>
+        <p>Controle de Produtos e Pizzas</p>
+    </header>
 
-    const tabela = document.getElementById("historico");
+    <main class="container">
 
-    tabela.innerHTML = "";
+        <!-- DASHBOARD -->
 
-    historico.forEach(function(item){
+        <section class="dashboard">
 
-        const linha = document.createElement("tr");
+            <div class="card indicador saldo-card">
+                <h3>🍕 Saldo Atual</h3>
+                <div id="saldo" class="numero">9</div>
+            </div>
 
-        linha.innerHTML =
-            "<td>" + item.data + "</td>" +
-            "<td>" + item.movimento + "</td>";
+            <div class="card indicador produto-card">
+                <h3>📦 Produtos Recebidos</h3>
+                <div id="totalProdutos" class="numero">0</div>
+            </div>
 
-        tabela.appendChild(linha);
+            <div class="card indicador retirada-card">
+                <h3>📉 Pizzas Retiradas</h3>
+                <div id="totalRetiradas" class="numero">0</div>
+            </div>
 
-    });
-}
+        </section>
 
-function dataAtual() {
-    return new Date().toLocaleString("pt-BR");
-}
+        <!-- RECEBIMENTO -->
 
-function receberProduto() {
+        <section class="card">
 
-    saldo += 6;
+            <h2>📦 Recebimento de Produtos</h2>
 
-    historico.unshift({
-        data: dataAtual(),
-        movimento: "Recebido 1 produto (+6 pizzas)"
-    });
+            <label>Quantidade de Produtos</label>
 
-    salvarDados();
-    atualizarTela();
-}
+            <input
+                type="number"
+                id="qtdProdutos"
+                value="1"
+                min="1">
 
-function registrarRetirada() {
+            <button
+                class="btn btn-sucesso"
+                onclick="registrarRecebimento()">
 
-    const responsavel =
-        document.getElementById("responsavel").value;
+                ➕ Registrar Recebimento
 
-    const quantidade =
-        Number(document.getElementById("quantidade").value);
+            </button>
 
-    if (quantidade <= 0) {
-        alert("Quantidade inválida.");
-        return;
-    }
+        </section>
 
-    if (quantidade > saldo) {
-        alert("Saldo insuficiente.");
-        return;
-    }
+        <!-- RETIRADA -->
 
-    saldo -= quantidade;
+        <section class="card">
 
-    historico.unshift({
-        data: dataAtual(),
-        movimento: responsavel + " retirou " + quantidade + " pizza(s)"
-    });
+            <h2>🍕 Retirada da Carina</h2>
 
-    salvarDados();
-    atualizarTela();
-}
+            <label>Quantidade de Pizzas</label>
 
-window.onload = function () {
-    atualizarTela();
-};
+            <input
+                type="number"
+                id="qtdRetirada"
+                value="1"
+                min="1">
+
+            <button
+                class="btn btn-perigo"
+                onclick="registrarRetirada()">
+
+                ➖ Registrar Retirada
+
+            </button>
+
+        </section>
+
+        <!-- AÇÕES -->
+
+        <section class="card">
+
+            <h2>⚙️ Ações</h2>
+
+            <div class="acoes">
+
+                <button
+                    class="btn btn-secundario"
+                    onclick="desfazerUltimo()">
+
+                    ↩️ Desfazer Último
+
+                </button>
+
+                <button
+                    class="btn btn-whats"
+                    onclick="copiarRelatorio()">
+
+                    📱 Relatório WhatsApp
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- HISTÓRICO -->
+
+        <section class="card">
+
+            <h2>📜 Histórico de Movimentações</h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Data/Hora</th>
+                        <th>Movimento</th>
+                        <th>Saldo</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="historico"></tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
