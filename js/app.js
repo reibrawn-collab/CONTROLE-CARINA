@@ -1,47 +1,78 @@
 let saldo = 9;
-let totalProdutos = 0;
-let totalRetiradas = 0;
 
-let historico =
-JSON.parse(localStorage.getItem("historicoCarina")) || [];
+let totalProdutos = 4;
 
-if(localStorage.getItem("saldoCarina")){
-    saldo = Number(localStorage.getItem("saldoCarina"));
+let totalRetiradas = 15;
+
+let historico = [
+{
+data:"17/10/2026",
+movimento:"Recebido 1 produto (+6 pizzas)",
+saldo:6
+},
+{
+data:"17/10/2026",
+movimento:"Carina retirou 1 pizza",
+saldo:5
+},
+{
+data:"25/10/2026",
+movimento:"Carina retirou 2 pizzas",
+saldo:3
+},
+{
+data:"31/10/2026",
+movimento:"Recebido 1 produto (+6 pizzas)",
+saldo:9
+},
+{
+data:"01/11/2026",
+movimento:"Carina retirou 2 pizzas",
+saldo:7
+},
+{
+data:"02/11/2026",
+movimento:"Carina retirou 2 pizzas",
+saldo:5
+},
+{
+data:"07/11/2026",
+movimento:"Carina retirou 2 pizzas",
+saldo:3
+},
+{
+data:"10/11/2026",
+movimento:"Recebido 1 produto (+6 pizzas)",
+saldo:9
+},
+{
+data:"10/11/2026",
+movimento:"Carina retirou 1 pizza",
+saldo:8
+},
+{
+data:"14/11/2026",
+movimento:"Carina retirou 2 pizzas",
+saldo:6
+},
+{
+data:"19/11/2026",
+movimento:"Carina retirou 1 pizza",
+saldo:5
+},
+{
+data:"21/11/2026",
+movimento:"Recebido 1 produto (+6 pizzas)",
+saldo:11
+},
+{
+data:"21/11/2026",
+movimento:"Carina retirou 2 pizzas",
+saldo:9
 }
+];
 
-if(localStorage.getItem("totalProdutos")){
-    totalProdutos =
-    Number(localStorage.getItem("totalProdutos"));
-}
-
-if(localStorage.getItem("totalRetiradas")){
-    totalRetiradas =
-    Number(localStorage.getItem("totalRetiradas"));
-}
-
-function salvar(){
-
-    localStorage.setItem(
-        "saldoCarina",
-        saldo
-    );
-
-    localStorage.setItem(
-        "totalProdutos",
-        totalProdutos
-    );
-
-    localStorage.setItem(
-        "totalRetiradas",
-        totalRetiradas
-    );
-
-    localStorage.setItem(
-        "historicoCarina",
-        JSON.stringify(historico)
-    );
-
-}
+i
 
 function atualizarTela(){
 
